@@ -8,5 +8,16 @@ channel_layer = get_channel_layer()
 @shared_task
 def long_running_add(group_name, x, y):
     time.sleep(5)
-    print(f"Sum: {x + y}")
+    print(x + y)
     async_to_sync(channel_layer.group_send)(group_name, {"type": "task.complete"})
+
+@shared_task
+def long_running_mult(group_name, x, y):
+    time.sleep(5)
+    print(x * y)
+    async_to_sync(channel_layer.group_send)(group_name, {"type": "task.complete"})
+
+TASKS = {
+    "add" : long_running_add,
+    "mult" : long_running_mult,
+}
